@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Watch Inventory Atelier</title>
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero-card">
+      <div class="hero-kicker">Personal watch ledger</div>
+      <div class="hero-topbar">
+        <div>
+          <h1>Watch Atelier</h1>
+          <p class="hero-copy">A polished mobile-first inventory for your buy, sell, and trade flow.</p>
+        </div>
+        <nav class="top-nav">
+          <a class="ghost-btn nav-btn" href="/">On Hand</a>
+          <a class="ghost-btn nav-btn" href="/history.html">History</a>
+        </nav>
+      </div>
+      <div id="summary" class="summary-grid"></div>
+    </header>
+
+    <section class="panel-card">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">On hand</div>
+          <h2>Current inventory</h2>
+        </div>
+        <button id="refreshBtn" class="ghost-btn">Refresh</button>
+      </div>
+      <div id="inventoryList" class="inventory-list"></div>
+    </section>
+  </div>
+
+  <div id="editorModal" class="modal-shell hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="true"></div>
+    <section class="modal-card">
+      <div class="section-head modal-head">
+        <div>
+          <div class="section-kicker">Watch editor</div>
+          <h2 id="editorTitle">Edit watch</h2>
+        </div>
+        <button id="closeEditorBtn" class="ghost-btn" type="button">Close</button>
+      </div>
+      <form id="watchForm" class="watch-form">
+        <input type="hidden" name="id" />
+        <div class="field-grid">
+          <label><span>Brand</span><input name="brand" required /></label>
+          <label><span>Model</span><input name="model" required /></label>
+          <label><span>Factory</span><input name="factory" /></label>
+          <label><span>Value</span><input name="paid_value" type="number" step="0.01" /></label>
+          <label><span>Status</span>
+            <select name="status" id="statusField">
+              <option value="on_hand">On hand</option>
+              <option value="pending">Pending</option>
+              <option value="sold">Sold</option>
+              <option value="traded">Traded</option>
+            </select>
+          </label>
+          <label><span>Acquisition type</span>
+            <select name="acquisition_type" id="acquisitionField">
+              <option value="purchase">Purchase</option>
+              <option value="trade">Trade</option>
+                          </select>
+          </label>
+        </div>
+        <div id="conditionalFields" class="field-grid conditional-fields"></div>
+
+        <div class="field-grid advanced-grid">
+          <label><span>Reference</span><input name="reference" /></label>
+          <label><span>Cover image</span><input id="imageUploadField" name="cover_upload" type="file" accept="image/*" /></label>
+          <label class="full-span"><span>Notes</span><textarea name="notes" rows="4"></textarea></label>
+        </div>
+
+        <div id="uploadStatus" class="form-status"></div>
+        <div id="tradeFlowFields" class="field-grid conditional-fields hidden"></div>
+        <div class="modal-actions">
+          <button id="startTradeSellBtn" type="button" class="ghost-btn">Trade / Sell</button>
+          <button type="submit" class="primary-btn">Save watch</button>
+        </div>
+        <div id="formStatus" class="form-status"></div>
+      </form>
+    </section>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
