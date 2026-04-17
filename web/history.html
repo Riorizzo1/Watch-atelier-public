@@ -7,23 +7,22 @@
   <link rel="stylesheet" href="/app.css" />
 </head>
 <body>
-  <div class="app-shell">
-    <header class="hero-card">
-      <div class="hero-kicker">Personal watch ledger</div>
-      <div class="hero-topbar">
-        <div>
-          <h1>Watch Atelier</h1>
-          <p class="hero-copy">Sold and traded records separated from current inventory.</p>
-        </div>
-        <nav class="top-nav">
-          <a class="ghost-btn nav-btn" href="/">On Hand</a>
-          <a class="ghost-btn nav-btn" href="/history.html">History</a>
-        </nav>
+  <div class="app-shell app-shell-dashboard">
+    <header class="dashboard-hero">
+      <div class="hero-floating hero-floating-left"></div>
+      <div class="hero-floating hero-floating-right"></div>
+      <div class="hero-copy-block">
+        <h1>Watch Atelier</h1>
+        <p class="hero-copy">Sold and traded records separated from current inventory.</p>
       </div>
-      <div id="summary" class="summary-grid"></div>
+      <nav class="segment-shell top-nav" aria-label="Inventory pages">
+        <a class="segment-btn" href="/">On Hand</a>
+        <a class="segment-btn segment-btn-active" href="/history.html">History</a>
+      </nav>
+      <div id="summary" class="dashboard-summary"></div>
     </header>
 
-    <section class="panel-card history-card">
+    <section class="panel-card history-card inventory-panel">
       <div class="section-head">
         <div>
           <div class="section-kicker">History</div>
@@ -37,53 +36,85 @@
 
   <div id="editorModal" class="modal-shell hidden" aria-hidden="true">
     <div class="modal-backdrop" data-close-modal="true"></div>
-    <section class="modal-card">
-      <div class="section-head modal-head">
+    <section class="modal-card editor-card">
+      <div class="section-head modal-head editor-head">
         <div>
           <div class="section-kicker">Watch editor</div>
-          <h2 id="editorTitle">Edit watch</h2>
+          <h2 id="editorTitle">Edit Details</h2>
         </div>
-        <button id="closeEditorBtn" class="ghost-btn" type="button">Close</button>
+        <button id="closeEditorBtn" class="editor-close-btn" type="button">×</button>
       </div>
-      <form id="watchForm" class="watch-form">
+      <form id="watchForm" class="watch-form editor-form">
         <input type="hidden" name="id" />
-        <div class="field-grid">
-          <label><span>Brand</span><input name="brand" required /></label>
-          <label><span>Model</span><input name="model" required /></label>
+
+        <div class="editor-section">
+          <div class="field-grid editor-field-grid editor-field-grid-top">
+            <label><span>Status</span>
+              <select name="status" id="statusField">
+                <option value="on_hand">On hand</option>
+                <option value="pending">Pending</option>
+                <option value="sold">Sold</option>
+                <option value="traded">Traded</option>
+              </select>
+            </label>
+            <label><span>Acquisition</span>
+              <select name="acquisition_type" id="acquisitionField">
+                <option value="purchase">Purchase</option>
+                <option value="trade">Trade</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="editor-section">
+          <label><span>Brand &amp; Model</span></label>
+          <div class="field-grid editor-field-grid editor-brand-model-grid">
+            <label><input name="brand" required placeholder="Brand" /></label>
+            <label class="editor-model-field"><input name="model" required placeholder="Model" /></label>
+          </div>
+        </div>
+
+        <div class="editor-section">
+          <label><span>Reference number</span><input name="reference" placeholder="Reference" /></label>
+        </div>
+
+        <div class="editor-section">
+          <div class="editor-upload-head">
+            <label><span>Cover image</span></label>
+            <span class="editor-upload-link">replace</span>
+          </div>
+          <label class="editor-upload-box"><input id="imageUploadField" name="cover_upload" type="file" accept="image/*" /><span>Choose image</span></label>
+        </div>
+
+        <div class="editor-section field-grid editor-field-grid">
           <label><span>Factory</span><input name="factory" /></label>
           <label><span>Value</span><input name="paid_value" type="number" step="0.01" /></label>
-          <label><span>Status</span>
-            <select name="status" id="statusField">
-              <option value="on_hand">On hand</option>
-              <option value="pending">Pending</option>
-              <option value="sold">Sold</option>
-              <option value="traded">Traded</option>
-            </select>
-          </label>
-          <label><span>Acquisition type</span>
-            <select name="acquisition_type" id="acquisitionField">
-              <option value="purchase">Purchase</option>
-              <option value="trade">Trade</option>
-                          </select>
-          </label>
         </div>
-        <div id="conditionalFields" class="field-grid conditional-fields"></div>
 
-        <div class="field-grid advanced-grid">
-          <label><span>Reference</span><input name="reference" /></label>
-          <label><span>Cover image</span><input id="imageUploadField" name="cover_upload" type="file" accept="image/*" /></label>
-          <label class="full-span"><span>Notes</span><textarea name="notes" rows="4"></textarea></label>
+        <div id="conditionalFields" class="field-grid conditional-fields editor-field-grid"></div>
+
+        <div class="editor-section">
+          <label><span>Notes</span><textarea name="notes" rows="4"></textarea></label>
         </div>
 
         <div id="uploadStatus" class="form-status"></div>
         <div id="tradeFlowFields" class="field-grid conditional-fields hidden"></div>
-        <div class="modal-actions">
-          <button id="startTradeSellBtn" type="button" class="ghost-btn">Trade / Sell</button>
-          <button type="submit" class="primary-btn">Save watch</button>
+        <div class="modal-actions editor-actions">
+          <button id="startTradeSellBtn" type="button" class="ghost-btn editor-secondary-btn">Trade / Sell</button>
+          <button id="cancelEditorBtn" type="button" class="ghost-btn editor-secondary-btn">Cancel</button>
+          <button type="submit" class="primary-btn editor-primary-btn">Save Changes</button>
         </div>
         <div id="formStatus" class="form-status"></div>
       </form>
     </section>
+  </div>
+
+  <div id="imageLightbox" class="image-lightbox hidden" aria-hidden="true">
+    <div class="image-lightbox-backdrop" data-close-lightbox="true"></div>
+    <div class="image-lightbox-card">
+      <button id="closeLightboxBtn" class="image-lightbox-close" type="button">×</button>
+      <img id="lightboxImage" src="" alt="Expanded watch image" />
+    </div>
   </div>
 
   <script src="/app.js"></script>

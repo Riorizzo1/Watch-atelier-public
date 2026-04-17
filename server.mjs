@@ -9,6 +9,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const dataPath = path.join(__dirname, 'data', 'inventory.json');
 const webDir = path.join(__dirname, 'web');
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -124,7 +126,7 @@ const server = http.createServer((req, res) => {
           factory: parsed.factory || '',
           reference: parsed.reference || '',
           status: parsed.status || existing?.status || 'on_hand',
-          acquisition_type: parsed.acquisition_type === 'trade' ? 'trade' : 'purchase',
+          acquisition_type: parsed.acquisition_type || existing?.acquisition_type || 'purchase',
           paid_value: Number(parsed.paid_value || 0),
           sold_value: parsed.sold_value !== undefined ? Number(parsed.sold_value || 0) : Number(existing?.sold_value || 0),
           traded_for_watch_id: parsed.traded_for_watch_id ?? existing?.traded_for_watch_id ?? '',
@@ -207,11 +209,45 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (req.method === 'POST' && url.pathname === '/api/watch/upload-image') {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk;
+      if (body.length > MAX_UPLOAD_BYTES * 2) req.destroy();
+    });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body || '{}');
+        if (!parsed.id || !parsed.filename || !parsed.dataUrl) return sendJson(res, 400, { error: 'id, filename, and dataUrl required' });
+        const match = String(parsed.dataUrl).match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
+        if (!match) return sendJson(res, 400, { error: 'invalid image data' });
+        const ext = (parsed.filename.split('.').pop() || 'jpg').replace(/[^a-z0-9]/gi, '').toLowerCase();
+        const buf = Buffer.from(match[2], 'base64');
+        if (buf.length > MAX_UPLOAD_BYTES) return sendJson(res, 400, { error: 'image too large' });
+        const safeName = `${parsed.id}.${ext}`;
+        const out = path.join(uploadsDir, safeName);
+        fs.writeFileSync(out, buf);
+        const db = getDb();
+        const idx = db.watches.findIndex(w => w.id === parsed.id);
+        if (idx < 0) return sendJson(res, 404, { error: 'watch not found' });
+        db.watches[idx].web_image = `/uploads/${safeName}`;
+        db.watches[idx].updated_at = new Date().toISOString();
+        writeJson(dataPath, db);
+        return sendJson(res, 200, { ok: true, web_image: `/uploads/${safeName}` });
+      } catch (err) {
+        return sendJson(res, 500, { error: String(err.message || err) });
+      }
+    });
+    return;
+  }
 
-
-
-
-
+  if (req.method === 'GET' && url.pathname.startsWith('/uploads/')) {
+    const file = path.join(uploadsDir, path.basename(url.pathname));
+    if (!fs.existsSync(file)) return sendJson(res, 404, { error: 'not found' });
+    const ext = path.extname(file).toLowerCase();
+    const type = ext === '.png' ? 'image/png' : ext === '.webp' ? 'image/webp' : 'image/jpeg';
+    return serveStatic(res, file, type);
+  }
 
   sendJson(res, 404, { error: 'not found' });
 });
