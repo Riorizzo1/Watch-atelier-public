@@ -8,13 +8,7 @@
 </head>
 <body>
   <div class="app-shell app-shell-dashboard">
-    <header class="dashboard-hero">
-      <div class="hero-floating hero-floating-left"></div>
-      <div class="hero-floating hero-floating-right"></div>
-      <div class="hero-copy-block">
-        <h1>Watch Atelier</h1>
-        <p class="hero-copy">A polished mobile-first inventory for your buy, sell, and trade flow.</p>
-      </div>
+    <header class="dashboard-hero dashboard-hero-minimal">
       <nav class="segment-shell top-nav" aria-label="Inventory pages">
         <a class="segment-btn segment-btn-active" href="/">On Hand</a>
         <a class="segment-btn" href="/history.html">History</a>
@@ -62,7 +56,7 @@
               <select name="acquisition_type" id="acquisitionField">
                 <option value="purchase">Purchase</option>
                 <option value="trade">Trade</option>
-              </select>
+                              </select>
             </label>
           </div>
         </div>
@@ -73,6 +67,10 @@
             <label><input name="brand" required placeholder="Brand" /></label>
             <label class="editor-model-field"><input name="model" required placeholder="Model" /></label>
           </div>
+        </div>
+
+        <div class="editor-section">
+          <label><span>Display name</span><input name="display_name" placeholder="Optional card title override" /></label>
         </div>
 
         <div class="editor-section">
@@ -99,13 +97,56 @@
         </div>
 
         <div id="uploadStatus" class="form-status"></div>
-        <div id="tradeFlowFields" class="field-grid conditional-fields hidden"></div>
         <div class="modal-actions editor-actions">
-          <button id="startTradeSellBtn" type="button" class="ghost-btn editor-secondary-btn">Trade / Sell</button>
           <button id="cancelEditorBtn" type="button" class="ghost-btn editor-secondary-btn">Cancel</button>
           <button type="submit" class="primary-btn editor-primary-btn">Save Changes</button>
         </div>
         <div id="formStatus" class="form-status"></div>
+      </form>
+    </section>
+  </div>
+
+  <div id="disposeModal" class="modal-shell hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-dispose-modal="true"></div>
+    <section class="modal-card editor-card">
+      <div class="section-head modal-head editor-head">
+        <div>
+          <div class="section-kicker">Disposition</div>
+          <h2 id="disposeTitle">Sell or Trade Watch</h2>
+        </div>
+        <button id="closeDisposeBtn" class="editor-close-btn" type="button">×</button>
+      </div>
+      <form id="disposeForm" class="watch-form editor-form">
+        <div class="editor-section">
+          <div class="dispose-mode-row">
+            <button id="sellModeBtn" type="button" class="catalog-action-btn catalog-edit-btn dispose-mode-btn">Sell</button>
+            <button id="tradeModeBtn" type="button" class="catalog-action-btn catalog-action-btn-primary dispose-mode-btn">Trade</button>
+          </div>
+        </div>
+        <div class="editor-section">
+          <div id="disposeContext" class="dispose-context-card"></div>
+        </div>
+        <div id="sellFields" class="editor-section hidden">
+          <div class="field-grid editor-field-grid">
+            <label><span>Sale value</span><input id="sellValueField" type="number" step="0.01" /></label>
+          </div>
+        </div>
+        <div id="tradeFields" class="editor-section hidden">
+          <div class="field-grid editor-field-grid">
+            <label><span>Your watch value in this deal</span><input id="tradeOutFlow" type="number" step="0.01" /></label>
+            <label><span>Incoming watch value</span><input id="tradeInFlow" type="number" step="0.01" /></label>
+            <label><span>New watch brand</span><input id="tradeNewBrand" /></label>
+            <label><span>New watch model</span><input id="tradeNewModel" /></label>
+            <label><span>New watch factory</span><input id="tradeNewFactory" /></label>
+            <label><span>New watch reference</span><input id="tradeNewReference" /></label>
+            <label class="full-span"><span>New watch notes</span><textarea id="tradeNewNotes" rows="3"></textarea></label>
+          </div>
+        </div>
+        <div class="modal-actions editor-actions">
+          <button id="cancelDisposeBtn" type="button" class="ghost-btn editor-secondary-btn">Cancel</button>
+          <button id="saveDisposeBtn" type="submit" class="primary-btn editor-primary-btn">Save</button>
+        </div>
+        <div id="disposeStatus" class="form-status"></div>
       </form>
     </section>
   </div>

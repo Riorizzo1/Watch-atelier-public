@@ -25,6 +25,89 @@ body {
 .app-shell-dashboard {
   max-width: 680px;
 }
+@media (min-width: 1100px) {
+  .app-shell {
+    max-width: 1480px;
+    padding: 20px 24px 40px;
+  }
+  .app-shell-dashboard {
+    max-width: 1480px;
+  }
+  .dashboard-hero {
+    padding: 16px 10px 82px;
+  }
+  .panel-card {
+    padding: 24px;
+  }
+  .inventory-panel {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .dashboard-summary {
+    grid-template-columns: minmax(320px, 0.9fr) minmax(420px, 1.1fr);
+    gap: 20px;
+    padding: 0 42px;
+    align-items: stretch;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .metric-card-summary-combined,
+  .metric-card-retail-breakdown,
+  .metric-card-collection,
+  .metric-pill-row {
+    grid-column: auto;
+  }
+  .metric-pill-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .inventory-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 22px;
+  }
+  .catalog-detail-row {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .catalog-price-block {
+    min-width: 0;
+    text-align: left;
+  }
+  .catalog-value {
+    font-size: 30px;
+    margin-bottom: 6px;
+  }
+  .catalog-title {
+    font-size: 24px;
+    line-height: 1.04;
+  }
+  .catalog-footnote {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .catalog-action-group-full {
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 12px;
+  }
+  .catalog-action-btn {
+    min-height: 68px;
+    padding: 14px 12px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1500px) {
+  .inventory-panel,
+  .dashboard-summary {
+    max-width: 1400px;
+  }
+  .inventory-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
 .hero-card, .panel-card, .modal-card {
   background: rgba(255,255,255,0.72);
   backdrop-filter: blur(10px);
@@ -38,19 +121,8 @@ body {
   position: relative;
   padding: 18px 6px 72px;
 }
-.hero-floating {
-  position: absolute;
-  top: -22px;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.82);
-  box-shadow: 0 10px 30px rgba(74, 54, 31, 0.08);
-}
-.hero-floating-left { left: -18px; }
-.hero-floating-right { right: -18px; }
-.hero-copy-block {
-  padding: 8px 34px 0;
+.dashboard-hero-minimal {
+  padding-top: 6px;
 }
 .hero-kicker, .section-kicker {
   text-transform: uppercase;
@@ -126,6 +198,114 @@ h2 { font-size: 24px; }
 .metric-card-wide {
   grid-column: 1 / -1;
   min-height: 126px;
+}
+.metric-card-retail-breakdown {
+  grid-column: 1 / -1;
+}
+.metric-card-summary-combined {
+  grid-column: 1 / -1;
+  padding-top: 28px;
+}
+.metric-summary-section {
+  display: grid;
+  gap: 16px;
+}
+.metric-summary-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.metric-summary-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(82, 88, 145, 0.24);
+  color: #d7ddf6;
+  font-size: 22px;
+}
+.metric-summary-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 18px 0;
+}
+.metric-collection-row-dark {
+  margin-top: 0;
+}
+.metric-value-collection-dark,
+.metric-value-dark {
+  color: #fff;
+}
+.metric-total-tag-dark,
+.metric-collection-side-stats-dark,
+.metric-card-summary-combined .metric-label,
+.metric-card-summary-combined .metric-collection-stat {
+  color: rgba(255,255,255,0.72);
+}
+.metric-breakdown-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 0;
+}
+.metric-breakdown-list-dark .metric-breakdown-row {
+  color: rgba(255,255,255,0.82);
+}
+.metric-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+.metric-breakdown-row strong {
+  color: #fff;
+  font-weight: 700;
+}
+.metric-breakdown-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  margin-right: 10px;
+}
+.metric-breakdown-dot.paid { background: #67c7df; }
+.metric-breakdown-dot.trade { background: #f2c14f; }
+.metric-breakdown-dot.monthly { background: #b57aff; }
+.metric-breakdown-bar {
+  display: flex;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+}
+.metric-breakdown-bar-seg.paid { background: #67c7df; }
+.metric-breakdown-bar-seg.trade { background: #f2c14f; }
+.metric-breakdown-bar-seg.monthly { background: #b57aff; }
+.metric-pill-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+.metric-pill-row-two-up {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.metric-card-pill {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 22px;
+}
+.metric-card-pill .metric-label {
+  margin-bottom: 12px;
+}
+.metric-card-pill .metric-value {
+  line-height: 1;
+  font-size: 22px;
 }
 .metric-icon {
   width: 58px;
@@ -220,6 +400,25 @@ h2 { font-size: 24px; }
   gap: 14px;
   margin-top: 34px;
 }
+.metric-collection-row-horizontal {
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+.metric-collection-total-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  min-width: 0;
+}
+.metric-collection-side-stats {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+  text-align: right;
+  font-size: 18px;
+  color: #b0abb1;
+}
 .metric-total-tag {
   font-size: 18px;
   letter-spacing: .12em;
@@ -246,6 +445,10 @@ h2 { font-size: 24px; }
   border-radius: 999px;
   background: #efedf1;
   overflow: hidden;
+}
+.metric-progress-track-dark {
+  background: rgba(106, 112, 170, 0.2);
+  margin-top: 4px;
 }
 .metric-progress-fill {
   height: 100%;
@@ -284,12 +487,19 @@ h2 { font-size: 24px; }
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
 }
+#inventoryList,
+#historyList {
+  align-items: stretch;
+}
 .catalog-tile {
   background: rgba(255,255,255,0.95);
   border: 1px solid rgba(230, 223, 213, 0.95);
   border-radius: 34px;
   padding: 18px;
   box-shadow: 0 18px 38px rgba(74, 54, 31, 0.08);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .catalog-frame {
   background: linear-gradient(180deg, #f8f5ef 0%, #f4efe6 100%);
@@ -399,8 +609,9 @@ h2 { font-size: 24px; }
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 18px;
+  gap: 20px;
+  margin-bottom: 20px;
+  min-height: 208px;
 }
 .catalog-name-block {
   flex: 1 1 auto;
@@ -408,13 +619,19 @@ h2 { font-size: 24px; }
 }
 .catalog-title {
   font-family: "Iowan Old Style", "Georgia", serif;
-  font-size: 32px;
-  line-height: 1.05;
-  margin-bottom: 8px;
+  font-size: 25px;
+  line-height: 1.04;
+  margin-bottom: 10px;
 }
 .catalog-footnote {
   color: #8f877d;
   font-size: 13px;
+  line-height: 1.45;
+}
+.catalog-footnote-stack {
+  display: grid;
+  gap: 2px;
+  margin-top: 4px;
 }
 .catalog-footnote-win {
   color: #567765;
@@ -423,7 +640,7 @@ h2 { font-size: 24px; }
   color: #8d645f;
 }
 .catalog-price-block {
-  min-width: 132px;
+  min-width: 142px;
   text-align: right;
 }
 .catalog-value {
@@ -491,7 +708,7 @@ h2 { font-size: 24px; }
   grid-template-columns: auto 1fr;
   align-items: center;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: auto;
 }
 .catalog-actions-reference {
   display: block;
@@ -512,8 +729,8 @@ h2 { font-size: 24px; }
 .catalog-action-group-full {
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 .catalog-action-btn, .ghost-btn, .primary-btn {
   border: 1px solid #e3ddd5;
@@ -642,6 +859,16 @@ textarea { resize: vertical; }
 .editor-field-grid {
   gap: 14px;
 }
+#tradeFlowFields {
+  gap: 12px;
+  margin-top: 2px;
+}
+#tradeFlowFields label > span {
+  margin-bottom: 6px;
+}
+.trade-flow-value-field {
+  grid-column: span 1;
+}
 .editor-field-grid-top {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -711,6 +938,35 @@ textarea { resize: vertical; }
   min-height: 74px;
   border-radius: 22px;
   font-size: 18px;
+}
+.dispose-mode-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.dispose-context-card {
+  border: 1px solid #ece4d9;
+  background: #fffdfa;
+  border-radius: 22px;
+  padding: 18px;
+}
+.dispose-context-kicker {
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 11px;
+  color: #8c8174;
+  margin-bottom: 8px;
+}
+.dispose-context-value {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 700;
+  color: #161616;
+  margin-bottom: 8px;
+}
+.dispose-context-note {
+  color: #8f877d;
+  font-size: 14px;
 }
 .editor-secondary-btn {
   background: #fffdfa;
@@ -804,6 +1060,15 @@ textarea { resize: vertical; }
   color: var(--muted);
 }
 @media (max-width: 640px) {
+  .metric-pill-row,
+  .metric-pill-row-two-up {
+    grid-template-columns: 1fr;
+  }
+  .metric-summary-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
   .field-grid {
     grid-template-columns: 1fr;
   }
@@ -812,22 +1077,15 @@ textarea { resize: vertical; }
     padding-left: 20px;
     padding-right: 20px;
   }
+  .dispose-mode-row {
+    grid-template-columns: 1fr;
+  }
   .editor-actions {
     padding: 16px 20px 20px;
     grid-template-columns: 1fr;
   }
   .dashboard-hero {
     padding: 12px 0 70px;
-  }
-  .hero-copy-block {
-    padding: 8px 22px 0;
-  }
-  h1 {
-    font-size: 40px;
-    margin-bottom: 14px;
-  }
-  .hero-copy {
-    font-size: 15px;
   }
   .segment-shell {
     margin: 24px 22px 18px;
@@ -984,6 +1242,9 @@ textarea { resize: vertical; }
   .metric-row {
     gap: 16px;
   }
+  .metric-collection-row-horizontal {
+    align-items: flex-end;
+  }
   .metric-label {
     font-size: 13px;
     margin-bottom: 8px;
@@ -997,6 +1258,10 @@ textarea { resize: vertical; }
   .metric-total-tag {
     font-size: 14px;
     padding-bottom: 8px;
+  }
+  .metric-collection-side-stats {
+    gap: 8px;
+    font-size: 14px;
   }
   .metric-collection-stats {
     margin-top: 18px;
@@ -1049,17 +1314,20 @@ textarea { resize: vertical; }
     font-size: 11px;
   }
   .catalog-detail-row {
-    gap: 12px;
-    margin-bottom: 14px;
+    gap: 14px;
+    margin-bottom: 16px;
+    min-height: 196px;
   }
   .catalog-title {
-    font-size: 26px;
+    font-size: 22px;
+    line-height: 1.04;
   }
   .catalog-footnote {
     font-size: 12px;
+    line-height: 1.4;
   }
   .catalog-price-block {
-    min-width: 108px;
+    min-width: 114px;
   }
   .catalog-value {
     font-size: 28px;
@@ -1069,6 +1337,7 @@ textarea { resize: vertical; }
   }
   .catalog-action-group-full {
     gap: 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .catalog-action-btn {
     min-height: 64px;
