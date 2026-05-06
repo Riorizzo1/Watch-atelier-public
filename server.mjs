@@ -185,15 +185,12 @@ function getInventorySummary(db) {
   const sold = watches.filter(w => w.status === 'sold');
   const traded = watches.filter(w => w.status === 'traded');
   const retailPaid = onHand
-    .filter(w => w.acquisition_type !== 'monthly_payment' && w.acquisition_type !== 'trade')
+    .filter(w => w.acquisition_type !== 'trade')
     .reduce((sum, w) => sum + Number(w.paid_value || 0), 0);
   const retailTrade = onHand
     .filter(w => w.acquisition_type === 'trade')
     .reduce((sum, w) => sum + Number(w.trade_in_value || 0), 0);
-  const monthlyValue = onHand
-    .filter(w => w.acquisition_type === 'monthly_payment')
-    .reduce((sum, w) => sum + Number(w.paid_value || 0), 0);
-  const retailOnHand = retailPaid + retailTrade + monthlyValue;
+  const retailOnHand = retailPaid + retailTrade;
   const totalSold = sold.reduce((sum, w) => sum + Number(w.sold_value || 0), 0);
   const netSales = sold.reduce((sum, w) => sum + Number(w.sale_delta || 0), 0);
   const tradeDelta = watches.reduce((sum, w) => sum + Number(w.trade_delta || 0), 0);
@@ -211,7 +208,6 @@ function getInventorySummary(db) {
       retail_on_hand: Math.round((retailOnHand + Number.EPSILON) * 100) / 100,
       retail_paid_value: Math.round((retailPaid + Number.EPSILON) * 100) / 100,
       retail_trade_value: Math.round((retailTrade + Number.EPSILON) * 100) / 100,
-      monthly_payment_value: Math.round((monthlyValue + Number.EPSILON) * 100) / 100,
       sold_value: Math.round((totalSold + Number.EPSILON) * 100) / 100,
       net_sales: Math.round((netSales + Number.EPSILON) * 100) / 100,
       trade_delta: Math.round((tradeDelta + Number.EPSILON) * 100) / 100,
@@ -270,14 +266,13 @@ const server = http.createServer((req, res) => {
           reference: parsed.reference || '',
           display_name: parsed.display_name ?? existing?.display_name ?? '',
           status: parsed.status || existing?.status || 'on_hand',
-          acquisition_type: parsed.acquisition_type || existing?.acquisition_type || 'purchase',
+          acquisition_type: parsed.acquisition_type === 'trade' ? 'trade' : 'purchase',
           paid_value: Number(parsed.paid_value || 0),
           sold_value: parsed.sold_value !== undefined ? Number(parsed.sold_value || 0) : Number(existing?.sold_value || 0),
           traded_for_watch_id: parsed.traded_for_watch_id ?? existing?.traded_for_watch_id ?? '',
           traded_for_label: parsed.traded_for_label ?? existing?.traded_for_label ?? '',
           trade_out_value: parsed.trade_out_value !== undefined ? Number(parsed.trade_out_value || 0) : Number(existing?.trade_out_value || 0),
           trade_in_value: parsed.trade_in_value !== undefined ? Number(parsed.trade_in_value || 0) : Number(existing?.trade_in_value || 0),
-          monthly_payment_period: parsed.monthly_payment_period ?? existing?.monthly_payment_period ?? '',
           notes: parsed.notes || '',
           web_image: parsed.web_image ?? existing?.web_image ?? '',
           personal_images: existing?.personal_images || [],
@@ -328,7 +323,6 @@ const server = http.createServer((req, res) => {
           trade_out_value: 0,
           trade_in_value: tradeInValue,
           linked_trade_from_watch_id: outgoing.id,
-          monthly_payment_period: '',
           notes: parsed.new_watch.notes || '',
           web_image: parsed.new_watch.web_image || '',
           personal_images: [],

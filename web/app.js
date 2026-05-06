@@ -37,7 +37,7 @@ function renderSummary(summary) {
   const onHand = Number(summary.counts.on_hand || 0);
   const outCount = Math.max(totalWatches - onHand, 0);
   const onHandRatio = totalWatches > 0 ? Math.max(0, Math.min(1, onHand / totalWatches)) : 0;
-  const retailOnHand = Number(summary.totals.retail_paid_value || 0) + Number(summary.totals.retail_trade_value || 0);
+  const retailOnHand = Number(summary.totals.retail_on_hand || 0);
   const retailPaid = Number(summary.totals.retail_paid_value || 0);
   const retailTrade = Number(summary.totals.retail_trade_value || 0);
   const chainTotal = Number(summary.totals.realized_chain_total || 0);
@@ -71,11 +71,11 @@ function renderSummary(summary) {
         <div class="metric-breakdown-list metric-breakdown-list-dark">
           <div class="metric-breakdown-row"><span><span class="metric-breakdown-dot paid"></span>Paid watches</span><strong>${money(retailPaid)}</strong></div>
           <div class="metric-breakdown-row"><span><span class="metric-breakdown-dot trade"></span>Trade watches</span><strong>${money(retailTrade)}</strong></div>
-                  </div>
+        </div>
         <div class="metric-breakdown-bar">
           <span class="metric-breakdown-bar-seg paid" style="width:${retailOnHand ? (retailPaid / retailOnHand) * 100 : 0}%"></span>
           <span class="metric-breakdown-bar-seg trade" style="width:${retailOnHand ? (retailTrade / retailOnHand) * 100 : 0}%"></span>
-                  </div>
+        </div>
       </div>
     </div>
     <div class="metric-pill-row metric-pill-row-two-up">
@@ -93,9 +93,6 @@ function renderSummary(summary) {
 
 function historyMarkup(w) {
   const blocks = [];
-  if (w.acquisition_type === 'monthly_payment') {
-    blocks.push(`<div class="event-block event-block-payment"><div class="event-title">Monthly payment watch</div><div class="event-detail">Counted in inventory value${w.monthly_payment_period ? ` • ${w.monthly_payment_period}` : ''}</div></div>`);
-  }
   if (w.trade_result) {
     blocks.push(`<div class="event-block event-block-${w.trade_result}"><div class="event-title">Trade ${w.trade_result}</div><div class="event-detail">${money(w.trade_out_value || w.paid_value)} → ${money(w.trade_in_value || 0)}</div><div class="event-delta">${w.trade_delta > 0 ? '+' : ''}${money(w.trade_delta)} ${w.traded_for_label ? `• ${w.traded_for_label}` : ''}</div></div>`);
   }
@@ -135,7 +132,6 @@ function tileMarkup(w, idx, kind = 'onhand') {
       <div class="catalog-detail-row">
         <div class="catalog-name-block">
           <div class="catalog-title">${displayName}</div>
-          ${w.acquisition_type === 'monthly_payment' ? '<div class="catalog-footnote">Monthly payment</div>' : ''}
           ${w.trade_result ? `<div class="catalog-footnote catalog-footnote-${w.trade_result}">${w.trade_result === 'win' ? `Trade surplus ${money(w.trade_delta)}` : w.trade_result === 'loss' ? `Trade loss ${money(Math.abs(w.trade_delta))}` : 'Even trade'}</div>` : ''}
           ${w.linked_trade_from_watch_id || (w.lineage_path || []).length > 1 ? `<div class="catalog-footnote catalog-footnote-stack"><span>Basis ${money(w.carried_basis)}</span><span>${w.chain_closed ? `Realized ${w.chain_final_realized_pl > 0 ? '+' : ''}${money(w.chain_final_realized_pl)}` : `Unrealized ${w.chain_unrealized_delta > 0 ? '+' : ''}${money(w.chain_unrealized_delta)}`}</span></div>` : ''}
         </div>
@@ -234,7 +230,6 @@ function fillEditor(watch, mode = 'edit') {
   if (form.elements.traded_for_label) form.elements.traded_for_label.value = safeWatch.traded_for_label || '';
   if (form.elements.trade_out_value) form.elements.trade_out_value.value = safeWatch.trade_out_value || '';
   if (form.elements.trade_in_value) form.elements.trade_in_value.value = safeWatch.trade_in_value || '';
-  if (form.elements.monthly_payment_period) form.elements.monthly_payment_period.value = safeWatch.monthly_payment_period || '';
   form.elements.cover_upload.value = '';
   openModal();
 }
@@ -332,7 +327,6 @@ function renderConditionalFields() {
     fields.push(`<label><span>Trade out value</span><input name="trade_out_value" type="number" step="0.01" value="${watch.trade_out_value || ''}" /></label>`);
     fields.push(`<label><span>Trade in value</span><input name="trade_in_value" type="number" step="0.01" value="${watch.trade_in_value || ''}" /></label>`);
   }
-  if (acquisition === 'monthly_payment') fields.push(`<label><span>Payment period</span><input name="monthly_payment_period" placeholder="Optional month or note" value="${watch.monthly_payment_period || ''}" /></label>`);
   root.innerHTML = fields.join('');
 }
 
